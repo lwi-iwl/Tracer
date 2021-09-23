@@ -10,9 +10,9 @@ namespace Tracer
     [Serializable]
     public class TempResult
     {
-        
         private List<AnotherThread> _anotherThreads = new List<AnotherThread>();
-
+        [XmlArrayItem("thread", Type = typeof(AnotherThread))]
+        [XmlArray(ElementName = "root")]
         public List<AnotherThread> AnotherThreads 
         {
             get 

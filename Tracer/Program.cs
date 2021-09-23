@@ -17,22 +17,22 @@ namespace Tracer
             myThread.Start(); 
             program.tracer.StartTrace();
             program.M2(program);
-            program.M3(program);
             program.tracer.StopTrace();
             TraceResult traceResult = program.tracer.GetTraceResult();
-            Serializator serializator = new Serializator();
-            serializator.Serialize(traceResult);
+            program.tracer.XMLSerialize(traceResult);
         }
 
         void M2(Program program) {
             tracer.StartTrace();
-            Thread.Sleep(3000);
+            M3(program);
+            Thread.Sleep(1000);
             tracer.StopTrace();
         }
 
         void M3(Program program)
         {
             tracer.StartTrace();
+            Thread.Sleep(3000);
             tracer.StopTrace();
         }
 

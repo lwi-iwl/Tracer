@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 namespace Tracer
 {
     [Serializable]
+    [XmlType("Thread")]
     public class AnotherThread
     {
         private int _id;
@@ -16,6 +17,7 @@ namespace Tracer
         [XmlIgnore]
         private Stack<Method> _methodStack = new Stack<Method>();
 
+        [XmlAttribute("id")]
         public int Id
         {
             get
@@ -29,6 +31,7 @@ namespace Tracer
             }
         }
 
+        [XmlAttribute("time")]
         public int Time
         {
             get
@@ -42,6 +45,7 @@ namespace Tracer
             }
         }
 
+        [XmlElement("method")]
         public List<Method> Methods
         {
             get

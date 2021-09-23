@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tracer.serialize;
 
 namespace Tracer
 {
@@ -12,6 +13,9 @@ namespace Tracer
     {
         private TempResult _tempResult = new TempResult();
         private object _locker = new object();
+        private FormatTranslator _formatTranslator = new FormatTranslator();
+        private JSONSerializator _jsonSerializator = new JSONSerializator();
+        private XMLSerializator _xmlSerializator = new XMLSerializator();
         public void StartTrace() 
         {
             lock (_locker)
@@ -73,56 +77,49 @@ namespace Tracer
             }
 
         }
-
-
-        private void nextMethod(Method method, int start, Stack<List<ReadOnlyMethod>> listStack) 
+        private void SetUnfinishedMethodsTime(Method method, int start)
         {
             if (method.Methods.Count != 0)
             {
                 foreach (var anotherMethod in method.Methods)
                 {
-                    List <ReadOnlyMethod> readOnlyMethods = new List<ReadOnlyMethod>();
-                    listStack.Push(readOnlyMethods);
-                    nextMethod(anotherMethod, start, listStack);
+                    SetUnfinishedMethodsTime(anotherMethod, start);
                 }
                 if (method.Name.Contains("Unfinished "))
                     method.Time = start - method.Time;
-                ReadOnlyMethod readOnlyMethod = new ReadOnlyMethod(method.Name, method.ClassName, method.Time, listStack.Pop());
-                listStack.Peek().Add(readOnlyMethod);
             }
             else
             {
                 if (method.Name.Contains("Unfinished "))
                     method.Time = start - method.Time;
-                ReadOnlyMethod readOnlyMethod = new ReadOnlyMethod(method.Name, method.ClassName, method.Time, listStack.Pop());
-                listStack.Peek().Add(readOnlyMethod);
             }
         }
-
         // получить результаты измерений  
         public TraceResult GetTraceResult() 
         {
-            int start = Environment.TickCount;
-            List<ReadOnlyThread> readOnlyThreads = new List<ReadOnlyThread>();
-            foreach (var anotherThread in _tempResult.AnotherThreads)
+            lock (_locker)
             {
-                Stack<List<ReadOnlyMethod>> listStack = new Stack<List<ReadOnlyMethod>>();
-                List<ReadOnlyMethod> readOnlyThreadMethods = new List<ReadOnlyMethod>();
-                listStack.Push(readOnlyThreadMethods);
-                foreach (var anotherMethod in anotherThread.Methods)
+                int start = Environment.TickCount;
+                foreach (var anotherThread in _tempResult.AnotherThreads)
                 {
-                    List<ReadOnlyMethod> readOnlyMethods = new List<ReadOnlyMethod>();
-                    listStack.Push(readOnlyMethods);
-                    nextMethod(anotherMethod, start, listStack);
+                    foreach (var anotherMethod in anotherThread.Methods)
+                    {
+                        SetUnfinishedMethodsTime(anotherMethod, start);
+                    }
                 }
-                anotherThread.Time = 0;
-                foreach (var anotherMethod in listStack.Peek())
-                    anotherThread.Time = anotherThread.Time + anotherMethod.Time;
-                ReadOnlyThread readOnlyThread = new ReadOnlyThread(anotherThread.Id, anotherThread.Time, listStack.Pop());
-                readOnlyThreads.Add(readOnlyThread); 
+
+                TraceResult traceResult = new TraceResult(_formatTranslator.toReadOnly(_tempResult));
+                return traceResult;
             }
-            TraceResult traceResult = new TraceResult(readOnlyThreads);
-            return traceResult;
+        }
+
+        public void XMLSerialize(TraceResult traceResult)
+        {
+            _xmlSerializator.Serialize(traceResult, _formatTranslator);
+        }
+
+        public void JSONSerialize()
+        { 
         }
 
     }
