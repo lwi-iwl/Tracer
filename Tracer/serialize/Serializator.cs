@@ -11,20 +11,79 @@ namespace Tracer
 {
     class Serializator
     {
-        public void Serialize(TraceResult traceResult) 
+        private TempResult _tempResult = new TempResult();
+
+        private void nextMethod(ReadOnlyMethod readOnlyMethod, Stack<List<Method>> listStack)
         {
-            XmlSerializer xsSubmit = new XmlSerializer(typeof(TraceResult));
+            if (readOnlyMethod.ReadOnlyMethods.Count != 0)
+            {
+                foreach (var anotherMethod in readOnlyMethod.ReadOnlyMethods)
+                {
+                    List<Method> methods = new List<Method>();
+                    listStack.Push(methods);
+                    nextMethod(anotherMethod, listStack);
+                }
+                Method method = new Method();
+                method.Name = readOnlyMethod.Name;
+                method.ClassName = readOnlyMethod.ClassName;
+                method.Time = readOnlyMethod.Time;
+                method.Methods = listStack.Pop();
+                listStack.Peek().Add(method);
+            }
+            else
+            {
+                Method method = new Method();
+                method.Name = readOnlyMethod.Name;
+                method.ClassName = readOnlyMethod.ClassName;
+                method.Time = readOnlyMethod.Time;
+                method.Methods = listStack.Pop();
+                listStack.Peek().Add(method);
+            }
+        }
+
+ 
+        public void Serialize(TraceResult traceResult)
+        {
+            List<AnotherThread> anotherThreads = new List<AnotherThread>();
+            foreach (var readOnlyThread in traceResult.ReadOnlyThread)
+            {
+                Stack<List<Method>> listStack = new Stack<List<Method>>();
+                List<Method> threadMethods = new List<Method>();
+                listStack.Push(threadMethods);
+                foreach (var anotherMethod in readOnlyThread.ReadOnlyMethods)
+                {
+                    List<Method> methods = new List<Method>();
+                    listStack.Push(methods);
+                    nextMethod(anotherMethod, listStack);
+                }
+                AnotherThread anotherThread = new AnotherThread();
+                anotherThread.Id = readOnlyThread.Id;
+                anotherThread.Time = readOnlyThread.Time;
+                anotherThread.Methods = listStack.Pop();
+                anotherThreads.Add(anotherThread);
+            }
+
+            TempResult tempResult = new TempResult();
+            tempResult.AnotherThreads = anotherThreads;
+
+
+            XmlSerializer xsSubmit = new XmlSerializer(typeof(TempResult));
             var xml = "";
 
             using (var sww = new StringWriter())
             {
-                using (XmlWriter writer = XmlWriter.Create(sww))
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Indent = true;
+                settings.OmitXmlDeclaration = true;
+                settings.NewLineOnAttributes = true;
+                settings.OmitXmlDeclaration = true;
+                using (XmlWriter writer = XmlWriter.Create(sww, settings))
                 {
-                    xsSubmit.Serialize(writer, traceResult);
-                    xml = sww.ToString(); // Your XML
-                    Console.WriteLine(xml);
+                    xsSubmit.Serialize(writer, tempResult);
+                    xml = sww.ToString();
                 }
             }
+            Console.Write(xml);
         }
 
     }

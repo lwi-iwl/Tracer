@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Tracer
 {
-    class TempResult
+    [Serializable]
+    public class TempResult
     {
+        
         private List<AnotherThread> _anotherThreads = new List<AnotherThread>();
 
         public List<AnotherThread> AnotherThreads 
@@ -15,6 +18,11 @@ namespace Tracer
             get 
             {
                 return _anotherThreads;
+            }
+
+            set
+            {
+                _anotherThreads = value;
             }
         }
     }

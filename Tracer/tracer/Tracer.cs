@@ -16,7 +16,6 @@ namespace Tracer
         {
             lock (_locker)
             {
-                int start = Environment.TickCount;
                 AnotherThread tempThread = new AnotherThread();
                 Method method = new Method();
                 bool found = false;
@@ -37,29 +36,26 @@ namespace Tracer
                         }
                     }
                 }
+                StackTrace stackTrace = new StackTrace();
+                stackTrace = new StackTrace();
+                method.Name = "Unfinished " + stackTrace.GetFrame(1).GetMethod().Name;
+                method.ClassName = stackTrace.GetFrame(1).GetMethod().ReflectedType.Name;
+                tempThread.MethodStack.Push(method);
                 if (!found)
                 {
                     tempThread.Id = Environment.CurrentManagedThreadId;
-                    tempThread.Time = start;
                     tempThread.Methods.Add(method);
                     _tempResult.AnotherThreads.Add(tempThread);
                 }
 
-                StackTrace stackTrace = new StackTrace();
-                stackTrace = new StackTrace();
-                method.Name = stackTrace.GetFrame(1).GetMethod().Name;
-                method.ClassName = stackTrace.GetFrame(1).GetMethod().ReflectedType.Name;
-                method.Time = start;
-                Console.WriteLine(method.Name);
-                Console.WriteLine(method.ClassName);
-                Console.WriteLine(method.Time);
-                tempThread.MethodStack.Push(method);
+                method.Time = Environment.TickCount;
             }
         }
 
         // вызывается в конце замеряемого метода 
         public void StopTrace()
         {
+            AnotherThread tempThread = new AnotherThread(); 
             lock (_locker)
             {
                 int start = Environment.TickCount;
@@ -67,50 +63,19 @@ namespace Tracer
                 {
                     if (anotherThread.Id == Environment.CurrentManagedThreadId)
                     {
+                        tempThread = anotherThread;
                         Method method = anotherThread.MethodStack.Pop();
-                        method.Time = method.Time - start;
+                        method.Time = start - method.Time;
+                        method.Name = method.Name.Replace("Unfinished ", "");
                     }
                 }
+                
             }
+
         }
 
-        public void printResult() 
-        {
-            foreach (var anotherThread in _tempResult.AnotherThreads)
-            {
-                Console.WriteLine(anotherThread.Id);
-                Console.Write("[");
-                foreach (var anotherMethod in anotherThread.Methods)
-                {
-                    Console.WriteLine(anotherMethod.Name);
-                    Console.Write("[");
-                    foreach (var anMethod in anotherMethod.Methods)
-                        Console.WriteLine(anMethod.Name);
-                    Console.Write("]");
-                }
-                Console.Write("]");
-            }
-        }
 
-        public void printResultTR(TraceResult traceResult)
-        {
-            foreach (var anotherThread in traceResult.ReadOnlyThread)
-            {
-                Console.WriteLine(anotherThread.Id);
-                Console.Write("[");
-                foreach (var anotherMethod in anotherThread.ReadOnlyMethods)
-                {
-                    Console.WriteLine(anotherMethod.Name);
-                    Console.Write("[");
-                    foreach (var anMethod in anotherMethod.ReadOnlyMethods)
-                        Console.WriteLine(anMethod.Name);
-                    Console.Write("]");
-                }
-                Console.Write("]");
-            }
-        }
-
-        public void nextMethod(Method method, Stack<List<ReadOnlyMethod>> listStack) 
+        private void nextMethod(Method method, int start, Stack<List<ReadOnlyMethod>> listStack) 
         {
             if (method.Methods.Count != 0)
             {
@@ -118,13 +83,17 @@ namespace Tracer
                 {
                     List <ReadOnlyMethod> readOnlyMethods = new List<ReadOnlyMethod>();
                     listStack.Push(readOnlyMethods);
-                    nextMethod(anotherMethod, listStack);
+                    nextMethod(anotherMethod, start, listStack);
                 }
+                if (method.Name.Contains("Unfinished "))
+                    method.Time = start - method.Time;
                 ReadOnlyMethod readOnlyMethod = new ReadOnlyMethod(method.Name, method.ClassName, method.Time, listStack.Pop());
                 listStack.Peek().Add(readOnlyMethod);
             }
             else
             {
+                if (method.Name.Contains("Unfinished "))
+                    method.Time = start - method.Time;
                 ReadOnlyMethod readOnlyMethod = new ReadOnlyMethod(method.Name, method.ClassName, method.Time, listStack.Pop());
                 listStack.Peek().Add(readOnlyMethod);
             }
@@ -133,6 +102,7 @@ namespace Tracer
         // получить результаты измерений  
         public TraceResult GetTraceResult() 
         {
+            int start = Environment.TickCount;
             List<ReadOnlyThread> readOnlyThreads = new List<ReadOnlyThread>();
             foreach (var anotherThread in _tempResult.AnotherThreads)
             {
@@ -143,8 +113,11 @@ namespace Tracer
                 {
                     List<ReadOnlyMethod> readOnlyMethods = new List<ReadOnlyMethod>();
                     listStack.Push(readOnlyMethods);
-                    nextMethod(anotherMethod, listStack);
+                    nextMethod(anotherMethod, start, listStack);
                 }
+                anotherThread.Time = 0;
+                foreach (var anotherMethod in listStack.Peek())
+                    anotherThread.Time = anotherThread.Time + anotherMethod.Time;
                 ReadOnlyThread readOnlyThread = new ReadOnlyThread(anotherThread.Id, anotherThread.Time, listStack.Pop());
                 readOnlyThreads.Add(readOnlyThread); 
             }

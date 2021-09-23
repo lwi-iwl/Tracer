@@ -19,21 +19,14 @@ namespace Tracer
             program.M2(program);
             program.M3(program);
             program.tracer.StopTrace();
-            program.tracer.printResult();
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine(""); 
             TraceResult traceResult = program.tracer.GetTraceResult();
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            program.tracer.printResultTR(traceResult);
             Serializator serializator = new Serializator();
             serializator.Serialize(traceResult);
         }
 
         void M2(Program program) {
             tracer.StartTrace();
+            Thread.Sleep(3000);
             tracer.StopTrace();
         }
 
@@ -45,18 +38,22 @@ namespace Tracer
 
         void M4() 
         {
-            tracer.StartTrace();
-            tracer.StopTrace();
+            M5();
+            M6();
         }
 
         void M5()
         {
-            Console.WriteLine(Environment.CurrentManagedThreadId);
+            tracer.StartTrace();
+            Thread.Sleep(4000);
+            tracer.StopTrace();
         }
 
         void M6()
         {
-            Console.WriteLine(Environment.CurrentManagedThreadId);
+            tracer.StartTrace();
+            Thread.Sleep(1000);
+            tracer.StopTrace();
         }
 
     }

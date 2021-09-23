@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Tracer
 {
-    [Serializable]
     class TraceResult
     {
         private IReadOnlyList<ReadOnlyThread> _readOnlyThreads;

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Tracer
 {
-    class Method {
+    [Serializable]
+    public class Method {
         private string _name;
         private string _className;
         private int _time;
