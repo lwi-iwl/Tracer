@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace Tracer
 {
     [Serializable]
-    [XmlType("Thread")]
+
     public class AnotherThread
     {
         private int _id;
@@ -18,6 +19,7 @@ namespace Tracer
         private Stack<Method> _methodStack = new Stack<Method>();
 
         [XmlAttribute("id")]
+        [JsonPropertyName("id")]
         public int Id
         {
             get
@@ -32,6 +34,7 @@ namespace Tracer
         }
 
         [XmlAttribute("time")]
+        [JsonPropertyName("time")]
         public int Time
         {
             get
@@ -46,6 +49,7 @@ namespace Tracer
         }
 
         [XmlElement("method")]
+        [JsonPropertyName("method")]
         public List<Method> Methods
         {
             get
@@ -59,6 +63,7 @@ namespace Tracer
             }
         }
         [XmlIgnore]
+        [JsonIgnore]
         public Stack<Method> MethodStack
         {
             get

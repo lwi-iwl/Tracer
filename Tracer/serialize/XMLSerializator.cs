@@ -18,7 +18,7 @@ namespace Tracer
 
             _tempResult.AnotherThreads = formatTranslator.toEditable(traceResult);
             XmlSerializer xsSubmit = new XmlSerializer(typeof(TempResult));
-            var xml = "";
+            string xml = "";
 
             using (var sww = new StringWriter())
             {

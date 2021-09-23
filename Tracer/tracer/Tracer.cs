@@ -118,8 +118,9 @@ namespace Tracer
             _xmlSerializator.Serialize(traceResult, _formatTranslator);
         }
 
-        public void JSONSerialize()
-        { 
+        public void JSONSerialize(TraceResult traceResult)
+        {
+            _jsonSerializator.Serialize(traceResult, _formatTranslator);
         }
 
     }

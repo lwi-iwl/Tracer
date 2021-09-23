@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -13,6 +14,7 @@ namespace Tracer
         private List<AnotherThread> _anotherThreads = new List<AnotherThread>();
         [XmlArrayItem("thread", Type = typeof(AnotherThread))]
         [XmlArray(ElementName = "root")]
+        [JsonPropertyName("threads")]
         public List<AnotherThread> AnotherThreads 
         {
             get 

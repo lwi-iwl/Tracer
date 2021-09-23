@@ -20,6 +20,7 @@ namespace Tracer
             program.tracer.StopTrace();
             TraceResult traceResult = program.tracer.GetTraceResult();
             program.tracer.XMLSerialize(traceResult);
+            program.tracer.JSONSerialize(traceResult);
         }
 
         void M2(Program program) {
