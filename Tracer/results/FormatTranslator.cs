@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tracer.serialize
 {
@@ -28,7 +25,7 @@ namespace Tracer.serialize
                 listStack.Peek().Add(readOnlyMethod);
             }
         }
-        public List<ReadOnlyThread> toReadOnly(TempResult tempResult)
+        public List<ReadOnlyThread> ToReadOnly(TempResult tempResult)
         {
             int start = Environment.TickCount;
             List<ReadOnlyThread> readOnlyThreads = new List<ReadOnlyThread>();

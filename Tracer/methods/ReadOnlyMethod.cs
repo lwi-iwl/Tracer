@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tracer
 {
@@ -16,10 +12,10 @@ namespace Tracer
 
         public ReadOnlyMethod(string name, string className, int time, List<ReadOnlyMethod> methods)
         {
-            this._readOnlyMethods = new ReadOnlyCollection<ReadOnlyMethod>(methods);
-            this._name = name;
-            this._className = className;
-            this._time = time;
+            _readOnlyMethods = new ReadOnlyCollection<ReadOnlyMethod>(methods);
+            _name = name;
+            _className = className;
+            _time = time;
         }
         public string Name
         {

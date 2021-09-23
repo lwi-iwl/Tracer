@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using Tracer.serialize;
 
 namespace Tracer
 {
-    class XMLSerializator
+    class XMLSerializer:Serializator
     {
         private TempResult _tempResult = new TempResult();
-        public void Serialize(TraceResult traceResult, FormatTranslator formatTranslator)
+        private FormatTranslator _formatTranslator = new FormatTranslator();
+        //public string Serialize(TraceResult traceResult, FormatTranslator formatTranslator)
+        public string Serialize(TraceResult traceResult)
         {
 
-            _tempResult.AnotherThreads = formatTranslator.toEditable(traceResult);
+            _tempResult.AnotherThreads = _formatTranslator.toEditable(traceResult);
             XmlSerializer xsSubmit = new XmlSerializer(typeof(TempResult));
             string xml = "";
 
@@ -31,7 +28,7 @@ namespace Tracer
                     xml = sww.ToString();
                 }
             }
-            Console.Write(xml);
+            return xml;
         }
     }
 }

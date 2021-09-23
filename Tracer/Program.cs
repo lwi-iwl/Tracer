@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+﻿using System.Threading;
+using Tracer.writer;
 
 namespace Tracer
 {
     class Program
     {
-        Tracer tracer = new Tracer();
+        ITracer tracer = new Tracer();
         static void Main(string[] args)
         {
             Program program = new Program();
@@ -19,8 +15,18 @@ namespace Tracer
             program.M2(program);
             program.tracer.StopTrace();
             TraceResult traceResult = program.tracer.GetTraceResult();
-            program.tracer.XMLSerialize(traceResult);
-            program.tracer.JSONSerialize(traceResult);
+            var jsonSerializer = new JSONSerializer();
+            var xmlSerializer = new XMLSerializer();
+            var fileWriter = new FileWriter();
+            var consoleWriter = new ConsoleWriter();
+            string jsonresult = jsonSerializer.Serialize(traceResult);
+            fileWriter.Write(jsonresult, "C:\\Users\\nikst\\tracerfiles\\tresult.json");
+            consoleWriter.Write(jsonresult);
+            string xmlresult = xmlSerializer.Serialize(traceResult);
+            fileWriter.Write(xmlresult, "C:\\Users\\nikst\\tracerfiles\\tresult.xml");
+            consoleWriter.Write(xmlresult);
+            //string result = program.tracer.XMLSerialize(traceResult);
+            //string result = program.tracer.JSONSerialize(traceResult);
         }
 
         void M2(Program program) {

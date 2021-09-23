@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Tracer
 {
     interface ITracer
@@ -16,5 +11,9 @@ namespace Tracer
     
         // получить результаты измерений  
         TraceResult GetTraceResult();
+
+       // string XMLSerialize();
+
+       // string JSONSerialize();
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Tracer.serialize;
 
 namespace Tracer
@@ -14,8 +11,8 @@ namespace Tracer
         private TempResult _tempResult = new TempResult();
         private object _locker = new object();
         private FormatTranslator _formatTranslator = new FormatTranslator();
-        private JSONSerializator _jsonSerializator = new JSONSerializator();
-        private XMLSerializator _xmlSerializator = new XMLSerializator();
+        //private JSONSerializer _jsonSerializer = new JSONSerializer();
+        //private XMLSerializer _xmlSerializer = new XMLSerializer();
         public void StartTrace() 
         {
             lock (_locker)
@@ -108,20 +105,23 @@ namespace Tracer
                     }
                 }
 
-                TraceResult traceResult = new TraceResult(_formatTranslator.toReadOnly(_tempResult));
+                TraceResult traceResult = new TraceResult(_formatTranslator.ToReadOnly(_tempResult));
                 return traceResult;
             }
         }
 
-        public void XMLSerialize(TraceResult traceResult)
+        /*
+        public string XMLSerialize(TraceResult traceResult)
         {
-            _xmlSerializator.Serialize(traceResult, _formatTranslator);
+            string result = _xmlSerializator.Serialize(traceResult, _formatTranslator);
+            return result;
         }
 
-        public void JSONSerialize(TraceResult traceResult)
+        public string JSONSerialize(TraceResult traceResult)
         {
-            _jsonSerializator.Serialize(traceResult, _formatTranslator);
-        }
+            string result = _jsonSerializator.Serialize(traceResult, _formatTranslator);
+            return result;
+        }*/
 
     }
 }
