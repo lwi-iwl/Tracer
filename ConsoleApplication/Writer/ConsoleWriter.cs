@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Tracer.writer
+namespace ConsoleApplication.Writer
 {
-    class ConsoleWriter 
+    public class ConsoleWriter 
     {
         public void Write(string result)
         {

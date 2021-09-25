@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using Tracer.serialize;
+using Tracer.Methods;
+using Tracer.Results;
+using Tracer.Threads;
 
-namespace Tracer
+namespace Tracer.Main
 {
 
-    class Tracer : ITracer
+    public class MainTracer : ITracer
     {
         private TempResult _tempResult = new TempResult();
         private object _locker = new object();
@@ -56,10 +58,10 @@ namespace Tracer
         // вызывается в конце замеряемого метода 
         public void StopTrace()
         {
+            int start = Environment.TickCount;
             AnotherThread tempThread = new AnotherThread(); 
             lock (_locker)
             {
-                int start = Environment.TickCount;
                 foreach (var anotherThread in _tempResult.AnotherThreads)
                 {
                     if (anotherThread.Id == Environment.CurrentManagedThreadId)

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Tracer.Threads;
 
-namespace Tracer
+namespace Tracer.Results
 {
-    class TraceResult
+    public class TraceResult
     {
         private IReadOnlyList<ReadOnlyThread> _readOnlyThreads;
 
@@ -12,7 +13,7 @@ namespace Tracer
             this._readOnlyThreads = new ReadOnlyCollection<ReadOnlyThread>(readOnlyThreads);
         }
 
-        public IReadOnlyList<ReadOnlyThread> ReadOnlyThread{
+        public IReadOnlyList<ReadOnlyThread> ReadOnlyThreads{
             get{
                 return _readOnlyThreads;    
             }

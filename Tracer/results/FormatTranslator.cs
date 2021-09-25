@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tracer.Methods;
+using Tracer.Threads;
 
-namespace Tracer.serialize
+namespace Tracer.Results
 {
-    class FormatTranslator
+    public class FormatTranslator
     {
 
         private void NextMethod(Method method, int start, Stack<List<ReadOnlyMethod>> listStack)
@@ -81,7 +83,7 @@ namespace Tracer.serialize
         public List<AnotherThread> toEditable(TraceResult traceResult)
         {
             List<AnotherThread> anotherThreads = new List<AnotherThread>();
-            foreach (var readOnlyThread in traceResult.ReadOnlyThread)
+            foreach (var readOnlyThread in traceResult.ReadOnlyThreads)
             {
                 Stack<List<Method>> listStack = new Stack<List<Method>>();
                 List<Method> threadMethods = new List<Method>();

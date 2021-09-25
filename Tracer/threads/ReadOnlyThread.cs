@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Tracer.Methods;
 
-namespace Tracer
+namespace Tracer.Threads
 {
-    class ReadOnlyThread
+    public class ReadOnlyThread
     {
         private int _id;
         private int _time;

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace Tracer.writer
+namespace ConsoleApplication.Writer
 {
-    class FileWriter
+    public class FileWriter
     {
         public void Write(string result, string filepath)
         {

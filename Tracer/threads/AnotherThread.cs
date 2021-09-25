@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
+using Tracer.Methods;
 
-namespace Tracer
+namespace Tracer.Threads
 {
     [Serializable]
 

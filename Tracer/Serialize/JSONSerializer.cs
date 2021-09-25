@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
-using Tracer.serialize;
+using Tracer.Results;
 
-namespace Tracer
+namespace Tracer.Serialize
 {
-    class JSONSerializer: Serializator
+    public class JSONSerializer: Serializator
     {
         private TempResult _tempResult = new TempResult();
         private FormatTranslator _formatTranslator = new FormatTranslator();

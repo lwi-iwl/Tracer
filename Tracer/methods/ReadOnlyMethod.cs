@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Tracer
+namespace Tracer.Methods
 {
-    class ReadOnlyMethod
+    public class ReadOnlyMethod
     {
         private string _name;
         private string _className;

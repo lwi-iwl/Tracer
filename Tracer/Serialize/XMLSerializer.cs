@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Tracer.serialize;
+using Tracer.Results;
 
-namespace Tracer
+namespace Tracer.Serialize
 {
-    class XMLSerializer:Serializator
+    public class XMLSerializer:Serializator
     {
         private TempResult _tempResult = new TempResult();
         private FormatTranslator _formatTranslator = new FormatTranslator();

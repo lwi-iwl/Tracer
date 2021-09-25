@@ -1,7 +1,9 @@
 ﻿
-namespace Tracer
+using Tracer.Results;
+
+namespace Tracer.Main
 {
-    interface ITracer
+    public interface ITracer
     {
         // вызывается в начале замеряемого метода
         void StartTrace();

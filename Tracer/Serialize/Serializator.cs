@@ -1,5 +1,7 @@
 ﻿
-namespace Tracer.serialize
+using Tracer.Results;
+
+namespace Tracer.Serialize
 {
     interface Serializator
     {
